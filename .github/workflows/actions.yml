@@ -18,3 +18,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           ignore-title: "true"
+          ignore-body: "false"
