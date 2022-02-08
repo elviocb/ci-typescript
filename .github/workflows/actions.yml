@@ -17,4 +17,4 @@ jobs:
         id: pull-request
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          ignore-title: true
+          ignore-title: "true"
