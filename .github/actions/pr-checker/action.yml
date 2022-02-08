@@ -6,8 +6,10 @@ inputs:
     required: true
   ignore-title:
     description: "Ignore Pull Request title checks"
+    required: false
   ignore-body:
     description: "Ignore Pull Request body checks"
+    required: false
 outputs:
   pull-request:
     description: "The pull request content"

@@ -50,8 +50,8 @@ async function run() {
   try {
     const inputs = {
       token: core.getInput("token"),
-      ignoreTitle: core.getBooleanInput("ignore-title"),
-      ignoreBody: core.getBooleanInput("ignore-body")
+      ignoreTitle: core.getBooleanInput("ignore-title", {required: false}),
+      ignoreBody: core.getBooleanInput("ignore-body", {required: false})
     }
 
     const octokit = github.getOctokit(inputs.token)
