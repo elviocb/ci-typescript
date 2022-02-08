@@ -1,0 +1,19 @@
+name: PR Checker
+
+on:
+  pull_request:
+    branches: [develop, master]
+    types: [synchronize, opened, reopened, edited, labeled, unlabeled]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout branch"
+        uses: actions/checkout@v2
+
+      - name: PR Checker
+        uses: ./.github/actions/pr-checker
+        id: pull-request
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

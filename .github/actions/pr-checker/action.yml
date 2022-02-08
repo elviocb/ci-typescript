@@ -1,0 +1,13 @@
+name: PR Checker
+author: Elvio Cavalcante
+description: 'Checks the PR body and title'
+inputs:
+  token:
+    description: 'Github Token'
+    required: true
+outputs:
+  pull-request:
+    description: 'The pull request content'
+runs:
+  using: 'node12'
+  main: './dist/index.js'
