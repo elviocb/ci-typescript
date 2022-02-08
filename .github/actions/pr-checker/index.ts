@@ -2,15 +2,6 @@ import * as core from "@actions/core"
 import * as github from "@actions/github"
 import {WebhookPayload} from "@actions/github/lib/interfaces"
 
-const TICKET_REGEX = /[[a-z0-9]{6,8}]/
-const TICKET_BASE_URL = "https://app.clickup.com/t/"
-const LINKED_TICKET_REGEX = new RegExp(TICKET_BASE_URL)
-const NOT_LINKED_TICKET_REGEX = /[[a-z0-9]{6,8}]\r?\n/
-const SQUARE_BRACKETS_REGEX = /[\[\]]/g
-const BYPASS_LABEL = "no-ticket"
-const SUCCESS_MESSAGE = "Thank you for connection the PR with a ticket."
-const BYPASS_MESSAGE = "The label to bypass this check was found, no checks will be performed."
-
 type Label = {
   name: string
 }
@@ -19,6 +10,15 @@ type PullRequest = WebhookPayload["pull_request"] & {
   title?: string
   labels: Label[]
 }
+
+const TICKET_REGEX = /[[a-z0-9]{6,8}]/
+const TICKET_BASE_URL = "https://app.clickup.com/t/"
+const LINKED_TICKET_REGEX = new RegExp(TICKET_BASE_URL)
+const NOT_LINKED_TICKET_REGEX = /[[a-z0-9]{6,8}]\r?\n/
+const SQUARE_BRACKETS_REGEX = /[\[\]]/g
+const BYPASS_LABEL = "no-ticket"
+const SUCCESS_MESSAGE = "Thank you for connection the PR with a ticket."
+const BYPASS_MESSAGE = "The label to bypass this check was found, no checks will be performed."
 
 const setErrorMessage = (type: "body" | "title") =>
   core.setFailed(
@@ -48,8 +48,13 @@ const linkTicketToBody = (body?: string) => {
 
 async function run() {
   try {
-    const token = core.getInput("token")
-    const octokit = github.getOctokit(token)
+    const inputs = {
+      token: core.getInput("token"),
+      ignoreTitle: core.getBooleanInput("ignore-title"),
+      ignoreBody: core.getBooleanInput("ignore-body")
+    }
+
+    const octokit = github.getOctokit(inputs.token)
     const pullRequest = github.context.payload.pull_request as PullRequest
     const {body, title, labels, number} = pullRequest || {}
 
@@ -62,7 +67,7 @@ async function run() {
       return
     }
 
-    if (!titleMatches) {
+    if (!titleMatches && !inputs.ignoreTitle) {
       setErrorMessage("title")
       return
     }

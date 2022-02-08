@@ -4,6 +4,10 @@ inputs:
   token:
     description: "Github Token"
     required: true
+  ignore-title:
+    description: "Ignore Pull Request title checks"
+  ignore-body:
+    description: "Ignore Pull Request body checks"
 outputs:
   pull-request:
     description: "The pull request content"
